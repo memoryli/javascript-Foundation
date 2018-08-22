@@ -110,6 +110,7 @@ function instanceof(left, right) {
     }
 }
 this
+
 this 是很多人会混淆的概念，但是其实他一点都不难，你只需要记住几个规则就可以了。
 function foo() {
 	console.log(this.a)
