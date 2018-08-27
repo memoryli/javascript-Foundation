@@ -1,5 +1,7 @@
-#**内置类型**
-
+Javascript总结
+=
+#内置类型
+--
 JS 中分为七种内置类型，七种内置类型又分为两大类型：基本类型和对象（Object）。
 
 基本类型有六种： null，undefined，boolean，number，string，symbol。
