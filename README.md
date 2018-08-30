@@ -407,6 +407,7 @@ define(function(require, exports, module) {
 防抖
 你是否在日常开发中遇到一个问题，在滚动事件中需要做个复杂计算或者实现一个按钮的防二次点击操作。
 这些需求都可以通过函数防抖动来实现。尤其是第一个需求，如果在频繁的事件回调中做复杂计算，很有可能导致页面卡顿，不如将多次计算合并为一次计算，只在一个精确点做操作。因为防抖动的轮子很多，这里也不重新自己造个轮子了，直接使用 underscore 的源码来解释防抖动。
+```
 /**
  * underscore 防抖函数，返回函数连续调用时，空闲时间必须大于或等于 wait，func 才会执行
  *
@@ -452,13 +453,15 @@ _.debounce = function(func, wait, immediate) {
       return result;
     };
   };
-整体函数实现的不难，总结一下。
-对于按钮防点击来说的实现：一旦我开始一个定时器，只要我定时器还在，不管你怎么点击都不会执行回调函数。一旦定时器结束并设置为 null，就可以再次点击了。
-对于延时执行函数来说的实现：每次调用防抖动函数都会判断本次调用和之前的时间间隔，如果小于需要的时间间隔，就会重新创建一个定时器，并且定时器的延时为设定时间减去之前的时间间隔。一旦时间到了，就会执行相应的回调函数。
-作用是在短时间内多次触发同一个函数，只执行最后一次，或者只在开始时执行
+  ```
+整体函数实现的不难，总结一下。<br>
+对于按钮防点击来说的实现：一旦我开始一个定时器，只要我定时器还在，不管你怎么点击都不会执行回调函数。一旦定时器结束并设置为 null，就可以再次点击了。<br>
+对于延时执行函数来说的实现：每次调用防抖动函数都会判断本次调用和之前的时间间隔，如果小于需要的时间间隔，就会重新创建一个定时器，并且定时器的延时为设定时间减去之前的时间间隔。一旦时间到了，就会执行相应的回调函数。<br>
+作用是在短时间内多次触发同一个函数，只执行最后一次，或者只在开始时执行<br>
 
-节流
-防抖动和节流本质是不一样的。防抖动是将多次执行变为最后一次执行，节流是将多次执行变成每隔一段时间执行。
+## 节流
+防抖动和节流本质是不一样的。防抖动是将多次执行变为最后一次执行，节流是将多次执行变成每隔一段时间执行。<br>
+```
 /**
  * underscore 节流函数，返回函数连续调用时，func 执行频率限定为 次 / wait
  *
@@ -524,8 +527,10 @@ _.throttle = function(func, wait, options) {
       return result;
     };
   };
-继承
-在 ES5 中，我们可以使用如下方式解决继承的问题
+  ```
+## 继承
+在 ES5 中，我们可以使用如下方式解决继承的问题<br>
+```
 function Super() {}
 Super.prototype.getNumber = function() {
   return 1
@@ -540,8 +545,10 @@ Sub.prototype = Object.create(Super.prototype, {
     configurable: true
   }
 })
-
-在 ES6 中，我们可以通过 class 语法轻松解决这个问题
+``` 
+<br>
+在 ES6 中，我们可以通过 class 语法轻松解决这个问题<br>
+```
 class MyDate extends Date {
   test() {
     return this.getTime()
@@ -549,9 +556,11 @@ class MyDate extends Date {
 }
 let myDate = new MyDate()
 myDate.test()
-call, apply, bind 区别
-call 和 apply 都是为了解决改变 this 的指向。作用都是相同的，只是传参的方式不同。
-除了第一个参数外，call 可以接收一个参数列表，apply 只接受一个参数数组。
+```
+### call, apply, bind 区别
+call 和 apply 都是为了解决改变 this 的指向。作用都是相同的，只是传参的方式不同。<br>
+除了第一个参数外，call 可以接收一个参数列表，apply 只接受一个参数数组。<br>
+```
 let a = {
     value: 1
 }
@@ -562,11 +571,13 @@ function getValue(name, age) {
 }
 getValue.call(a, 'yck', '24')
 getValue.apply(a, ['yck', '24'])
-模拟实现 call 和 apply
+```
+### 模拟实现 call 和 apply<br>
 
-可以从以下几点来考虑如何实现
-不传入第一个参数，那么默认为 window
-改变了 this 指向，让新的对象可以执行该函数。那么思路是否可以变成给新的对象添加一个函数，然后在执行完以后删除？
+可以从以下几点来考虑如何实现<br>
+不传入第一个参数，那么默认为 window<br>
+改变了 this 指向，让新的对象可以执行该函数。那么思路是否可以变成给新的对象添加一个函数，然后在执行完以后删除？<br>
+```
 Function.prototype.myCall = function (context) {
   var context = context || window
   // 给 context 添加一个属性
@@ -597,7 +608,8 @@ Function.prototype.myApply = function (context) {
   delete context.fn
   return result
 }
-bind 和其他两个方法作用也是一致的，只是该方法会返回一个函数。并且我们可以通过 bind 实现柯里化。
+```
+bind 和其他两个方法作用也是一致的，只是该方法会返回一个函数。并且我们可以通过 bind 实现柯里化。<br>
 同样的，也来模拟实现下 bind
 Function.prototype.myBind = function (context) {
   if (typeof this !== 'function') {
