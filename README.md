@@ -126,7 +126,8 @@ function instanceof(left, right) {
 }
 this
 
-this 是很多人会混淆的概念，但是其实他一点都不难，你只需要记住几个规则就可以了。
+this 是很多人会混淆的概念，但是其实他一点都不难，你只需要记住几个规则就可以了。<br>
+```
 function foo() {
 	console.log(this.a)
 }
@@ -138,13 +139,17 @@ var obj = {
 	foo: foo
 }
 obj.foo()
-// 以上两者情况 `this` 只依赖于调用函数前的对象，优先级是第二个情况大于第一个情况
-// 以下情况是优先级最高的，`this` 只会绑定在 `c` 上，不会被任何方式修改 `this` 指向
+```
+// 以上两者情况 `this` 只依赖于调用函数前的对象，优先级是第二个情况大于第一个情况<br>
+// 以下情况是优先级最高的，`this` 只会绑定在 `c` 上，不会被任何方式修改 `this` 指向<br>
+```
 var c = new foo()
 c.a = 3
 console.log(c.a)
-// 还有种就是利用 call，apply，bind 改变 this，这个优先级仅次于 new
-下面让我们看看箭头函数中的 this
+```
+// 还有种就是利用 call，apply，bind 改变 this，这个优先级仅次于 new <br>
+下面让我们看看箭头函数中的 this <br>
+```
 function a() {
     return () => {
         return () => {
@@ -153,23 +158,26 @@ function a() {
     }
 }
 console.log(a()()())
-箭头函数其实是没有 this 的，这个函数中的 this 只取决于他外面的第一个不是箭头函数的函数的 this。在这个例子中，因为调用 a 符合前面代码中的第一个情况，所以 this 是 window。并且 this 一旦绑定了上下文，就不会被任何代码改变。
-执行上下文
-当执行 JS 代码时，会产生三种执行上下文
-全局执行上下文
-函数执行上下文
-eval 执行上下文
-每个执行上下文中都有三个重要的属性
-变量对象（VO），包含变量、函数声明和函数的形参，该属性只能在全局上下文中访问
-作用域链（JS 采用词法作用域，也就是说变量的作用域是在定义时就决定了）
+```
+箭头函数其实是没有 this 的，这个函数中的 this 只取决于他外面的第一个不是箭头函数的函数的 this。在这个例子中，因为调用 a 符合前面代码中的第一个情况，所以 this 是 window。并且 this 一旦绑定了上下文，就不会被任何代码改变。<br>
+### 执行上下文
+当执行 JS 代码时，会产生三种执行上下文<br>
+全局执行上下文<br>
+函数执行上下文<br>
+eval 执行上下文<br>
+每个执行上下文中都有三个重要的属性<br>
+变量对象（VO），包含变量、函数声明和函数的形参，该属性只能在全局上下文中访问<br>
+作用域链（JS 采用词法作用域，也就是说变量的作用域是在定义时就决定了）<br>
+```
 this
 var a = 10
 function foo(i) {
   var b = 20
 }
 foo()
-对于上述代码，执行栈中有两个上下文：全局上下文和函数 foo 上下文。
-对于作用域链，可以把它理解成包含自身变量对象和上级变量对象的列表，通过 [[Scope]] 属性查找上级变量
+```
+对于上述代码，执行栈中有两个上下文：全局上下文和函数 foo 上下文。<br>
+对于作用域链，可以把它理解成包含自身变量对象和上级变量对象的列表，通过 [[Scope]] 属性查找上级变量<br>
 接下来让我们看一个老生常谈的例子，var
 b() // call b
 console.log(a) // undefined
@@ -235,7 +243,8 @@ for ( let i=1; i<=5; i++) {
 		console.log( i );
 	}, i*1000 );
 }
-因为对于 let 来说，他会创建一个块级作用域，相当于
+因为对于 let 来说，他会创建一个块级作用域，相当于<br>
+```
 { // 形成块级作用域
   let i = 0
   {
@@ -254,31 +263,38 @@ for ( let i=1; i<=5; i++) {
   }
   ...
 }
-深浅拷贝
+```
+### 深浅拷贝
+```
 let a = {
     age: 1
 }
 let b = a
 a.age = 2
 console.log(b.age) // 2
-
-从上述例子中我们可以发现，如果给一个变量赋值一个对象，那么两者的值会是同一个引用，其中一方改变，另一方也会相应改变。
-通常在开发中我们不希望出现这样的问题，我们可以使用浅拷贝来解决这个问题
-首先可以通过 Object.assign 来解决这个问题。
+```
+从上述例子中我们可以发现，如果给一个变量赋值一个对象，那么两者的值会是同一个引用，其中一方改变，另一方也会相应改变。<br>
+通常在开发中我们不希望出现这样的问题，我们可以使用浅拷贝来解决这个问题<br>
+首先可以通过 Object.assign 来解决这个问题。<br>
+```
 let a = {
     age: 1
 }
 let b = Object.assign({}, a)
 a.age = 2
 console.log(b.age) // 1
-当然我们也可以通过展开运算符（…）来解决
+```
+当然我们也可以通过展开运算符（…）来解决<br>
+```
 let a = {
     age: 1
 }
 let b = {...a}
 a.age = 2
 console.log(b.age) // 1
-通常浅拷贝就能解决大部分问题了，但是当我们遇到如下情况就需要使用到深拷贝了
+```
+通常浅拷贝就能解决大部分问题了，但是当我们遇到如下情况就需要使用到深拷贝了<br>
+```
 let a = {
     age: 1,
     jobs: {
@@ -288,8 +304,10 @@ let a = {
 let b = {...a}
 a.jobs.first = 'native'
 console.log(b.jobs.first) // native
-浅拷贝只解决了第一层的问题，如果接下去的值中还有对象的话，那么就又回到刚开始的话题了，两者享有相同的引用。要解决这个问题，我们需要引入深拷贝。
-这个问题通常可以通过 JSON.parse(JSON.stringify(object)) 来解决
+```
+浅拷贝只解决了第一层的问题，如果接下去的值中还有对象的话，那么就又回到刚开始的话题了，两者享有相同的引用。要解决这个问题，我们需要引入深拷贝。<br>
+这个问题通常可以通过 JSON.parse(JSON.stringify(object)) 来解决<br>
+```
 let a = {
     age: 1,
     jobs: {
@@ -299,10 +317,12 @@ let a = {
 let b = JSON.parse(JSON.stringify(a))
 a.jobs.first = 'native'
 console.log(b.jobs.first) // FE
-但是该方法也是有局限性的：
-会忽略 undefined
-不能序列化函数
-不能解决循环引用的对象
+```
+但是该方法也是有局限性的：<br>
+会忽略 undefined<br>
+不能序列化函数<br>
+不能解决循环引用的对象<br>
+```
 let obj = {
   a: 1,
   b: {
@@ -317,9 +337,11 @@ obj.b.d = obj.b
 obj.b.e = obj.b.c
 let newObj = JSON.parse(JSON.stringify(obj))
 console.log(newObj)
-如果你有这么一个循环引用对象，你会发现你不能通过该方法深拷贝
+```
+如果你有这么一个循环引用对象，你会发现你不能通过该方法深拷贝<br>
 
-在遇到函数或者 undefined 的时候，该对象也不能正常的序列化
+在遇到函数或者 undefined 的时候，该对象也不能正常的序列化<br>
+```
 let a = {
     age: undefined,
     jobs: function() {},
@@ -327,9 +349,11 @@ let a = {
 }
 let b = JSON.parse(JSON.stringify(a))
 console.log(b) // {name: "yck"}
-你会发现在上述情况中，该方法会忽略掉函数和 undefined
-但是在通常情况下，复杂数据都是可以序列化的，所以这个函数可以解决大部分问题，并且该函数是内置函数中处理深拷贝性能最快的。当然如果你的数据中含有以上三种情况下，可以使用 lodash 的深拷贝函数。
-如果你所需拷贝的对象含有内置类型并且不包含函数，可以使用 MessageChannel
+```
+你会发现在上述情况中，该方法会忽略掉函数和 undefined<br>
+但是在通常情况下，复杂数据都是可以序列化的，所以这个函数可以解决大部分问题，并且该函数是内置函数中处理深拷贝性能最快的。当然如果你的数据中含有以上三种情况下，可以使用 lodash 的深拷贝函数。<br>
+如果你所需拷贝的对象含有内置类型并且不包含函数，可以使用 MessageChannel<br>
+```
 function structuralClone(obj) {
   return new Promise(resolve => {
     const {port1, port2} = new MessageChannel();
@@ -341,11 +365,15 @@ function structuralClone(obj) {
 var obj = {a: 1, b: {
     c: b
 }}
-// 注意该方法是异步的
-// 可以处理 undefined 和循环引用对象
+```
+// 注意该方法是异步的<br>
+// 可以处理 undefined 和循环引用对象<br>
+```
 const clone = await structuralClone(obj);
-模块化
-在有 Babel 的情况下，我们可以直接使用 ES6 的模块化
+```
+### 模块化
+在有 Babel 的情况下，我们可以直接使用 ES6 的模块化<br>
+```
 // file a.js
 export function a() {}
 export function b() {}
@@ -354,8 +382,9 @@ export default function() {}
 
 import {a, b} from './a.js'
 import XXX from './b.js'
-CommonJS
-CommonJs 是 Node 独有的规范，浏览器中使用就需要用到 Browserify 解析了
+```
+#### CommonJS
+CommonJs 是 Node 独有的规范，浏览器中使用就需要用到 Browserify 解析了<br>
 // a.js
 module.exports = {
     a: 1
