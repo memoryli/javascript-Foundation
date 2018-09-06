@@ -1468,4 +1468,174 @@ mergeSort(data, 0, 6) // mid = 3
   // 左边数组排序完毕，右边也是如上轨迹
 ```
 
+# 快排
+快排的原理如下。随机选取一个数组中的值作为基准值，从左至右取值与基准值对比大小。比基准值小的放数组左边，大的放右边，对比完成后将基准值和第一个比基准值大的值交换位置。然后将数组以基准值的位置分为两部分，继续递归以上操作。<br>
+以下是实现该算法的代码
+```
+function sort(array) {
+  checkArray(array);
+  quickSort(array, 0, array.length - 1);
+  return array;
+}
+
+function quickSort(array, left, right) {
+  if (left < right) {
+    swap(array, , right)
+    // 随机取值，然后和末尾交换，这样做比固定取一个位置的复杂度略低
+    let indexs = part(array, parseInt(Math.random() * (right - left + 1)) + left, right);
+    quickSort(array, left, indexs[0]);
+    quickSort(array, indexs[1] + 1, right);
+  }
+}
+function part(array, left, right) {
+  let less = left - 1;
+  let more = right;
+  while (left < more) {
+    if (array[left] < array[right]) {
+      // 当前值比基准值小，`less` 和 `left` 都加一
+	   ++less;
+       ++left;
+    } else if (array[left] > array[right]) {
+      // 当前值比基准值大，将当前值和右边的值交换
+      // 并且不改变 `left`，因为当前换过来的值还没有判断过大小
+      swap(array, --more, left);
+    } else {
+      // 和基准值相同，只移动下标
+      left++;
+    }
+  }
+  // 将基准值和比基准值大的第一个值交换位置
+  // 这样数组就变成 `[比基准值小, 基准值, 比基准值大]`
+  swap(array, right, more);
+  return [less, more];
+}
+```
+题目需要我们将 [2,0,2,1,1,0] 排序成 [0,0,1,1,2,2] ，这个问题就可以使用三路快排的思想。
+```
+var sortColors = function(nums) {
+  let left = -1;
+  let right = nums.length;
+  let i = 0;
+  // 下标如果遇到 right，说明已经排序完成
+  while (i < right) {
+    if (nums[i] == 0) {
+      swap(nums, i++, ++left);
+    } else if (nums[i] == 1) {
+      i++;
+    } else {
+      swap(nums, i, --right);
+    }
+  }
+};
+```
+# 链表
+题目需要将一个单向链表反转。思路很简单，使用三个变量分别表示当前节点和当前节点的前后节点，虽然这题很简单，但是却是一道面试常考题
+```
+var reverseList = function(head) {
+    // 判断下变量边界问题
+    if (!head || !head.next) return head
+    // 初始设置为空，因为第一个节点反转后就是尾部，尾部节点指向 null
+    let pre = null
+    let current = head
+    let next
+    // 判断当前节点是否为空
+    // 不为空就先获取当前节点的下一节点
+    // 然后把当前节点的 next 设为上一个节点
+    // 然后把 current 设为下一个节点，pre 设为当前节点
+    while(current) {
+        next = current.next
+        current.next = pre
+        pre = current
+        current = next
+    }
+    return pre
+};
+```
+# 树
+# 二叉树的先序，中序，后序遍历
+先序遍历表示先访问根节点，然后访问左节点，最后访问右节点。<br>
+中序遍历表示先访问左节点，然后访问根节点，最后访问右节点。<br>
+后序遍历表示先访问左节点，然后访问右节点，最后访问根节点。
+### 递归实现
+```
+function TreeNode(val) {
+  this.val = val;
+  this.left = this.right = null;
+}
+var traversal = function(root) {
+  if (root) {
+    // 先序
+    console.log(root); 
+    traversal(root.left);
+    // 中序
+    // console.log(root); 
+    traversal(root.right);
+    // 后序
+    // console.log(root);
+  }
+};
+```
+### 非递归实现
+非递归实现使用了栈的结构，通过栈的先进后出模拟递归实现。
+```
+function pre(root) {
+  if (root) {
+    let stack = [];
+    // 先将根节点 push
+    stack.push(root);
+    // 判断栈中是否为空
+    while (stack.length > 0) {
+      // 弹出栈顶元素
+      root = stack.pop();
+      console.log(root);
+      // 因为先序遍历是先左后右，栈是先进后出结构
+      // 所以先 push 右边再 push 左边
+      if (root.right) {
+        stack.push(root.right);
+      }
+      if (root.left) {
+        stack.push(root.left);
+      }
+    }
+  }
+}
+```
+## 斐波那契数列
+斐波那契数列就是从 0 和 1 开始，后面的数都是前两个数之和<br>
+0，1，1，2，3，5，8，13，21，34，55，89....<br>
+那么显然易见，我们可以通过递归的方式来完成求解斐波那契数列<br>
+```
+function fib(n) {
+  if (n < 2 && n >= 0) return n
+  return fib(n - 1) + fib(n - 2)
+}
+fib(10)
+```
+以上代码已经可以完美的解决问题。但是以上解法却存在很严重的性能问题，当 n 越大的时候，需要的时间是指数增长的，这时候就可以通过动态规划来解决这个问题。<br>
+动态规划的本质其实就是两点<br>
+1、自底向上分解子问题<br>
+2、通过变量存储已经计算过的解<br>
+根据上面两点，我们的斐波那契数列的动态规划思路也就出来了<br>
+1、斐波那契数列从 0 和 1 开始，那么这就是这个子问题的最底层<br>
+2、通过数组来存储每一位所对应的斐波那契数列的值<br>
+```
+function fib(n) {
+  let array = new Array(n + 1).fill(null)
+  array[0] = 0
+  array[1] = 1
+  for (let i = 2; i <= n; i++) {
+    array[i] = array[i - 1] + array[i - 2]
+  }
+  return array[n]
+}
+fib(10)
+```
+
+# 网络
+# UDP
+## 面向报文
+UDP是一个面向报文（报文可以理解为一段段的数据）的协议，UDP只是报文的搬运工，不会对报文进行拆分和拼接操作。<br>
+具体来说<br>
+在发送端，应用层将数据传递给传输层UDP协议，UDP 只会给数据增加一个 UDP 头标识下是 UDP 协议，然后就传递给网络层了<br>
+在接收端，网络层将数据传递给传输层，UDP 只去除 IP 报文头就传递给应用层，不会任何拼接操作<br>
 
